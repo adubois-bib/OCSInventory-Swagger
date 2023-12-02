@@ -1,0 +1,22 @@
+# coding: utf-8
+
+# flake8: noqa
+from __future__ import absolute_import
+# import models into model package
+from swagger_server.models.computer_detail import ComputerDetail
+from swagger_server.models.computer_detail_computer_id import ComputerDetailComputerId
+from swagger_server.models.computers_list import ComputersList
+from swagger_server.models.computers_list_computer_id import ComputersListComputerId
+from swagger_server.models.computers_list_computer_id_accountinfo import ComputersListComputerIdAccountinfo
+from swagger_server.models.computers_list_computer_id_bios import ComputersListComputerIdBios
+from swagger_server.models.ipdiscover_list import IpdiscoverList
+from swagger_server.models.ipdiscover_list_inner import IpdiscoverListInner
+from swagger_server.models.ipdiscover_netdevices import IpdiscoverNetdevices
+from swagger_server.models.ipdiscover_netdevices_inner import IpdiscoverNetdevicesInner
+from swagger_server.models.list_of_id import ListOfID
+from swagger_server.models.snmp_detail import SNMPDetail
+from swagger_server.models.snmp_detail_inner import SNMPDetailInner
+from swagger_server.models.snmp_type import SNMPType
+from swagger_server.models.snmp_type_inner import SNMPTypeInner
+from swagger_server.models.softwares_list import SoftwaresList
+from swagger_server.models.softwares_list_inner import SoftwaresListInner

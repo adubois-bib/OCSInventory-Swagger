@@ -1,0 +1,840 @@
+openapi: 3.0.2
+info:
+  title: OCS Inventory Rest API
+  version: "1.0"
+servers:
+- url: https://api.ocsinventory-ng.tld/ocsapi/v1
+security:
+- basicAuth: []
+paths:
+  /computers/listID:
+    get:
+      summary: Get a ID list of all computers in the OCS database
+      operationId: computersListIDGET
+      parameters:
+      - name: start
+        in: query
+        description: Start offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Limit offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/listOfID'
+                x-content-type: application/json
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /computers/lastupdate/{timestamp}:
+    get:
+      summary: Get a ID list of computers update during the provided timestamp
+      operationId: computersLastupdateTimestampGET
+      parameters:
+      - name: timestamp
+        in: path
+        description: Timestamp of the number of days to count down from the current
+          date. Optional.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/listOfID'
+                x-content-type: application/json
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /computers:
+    get:
+      summary: Get a list of computers with its detail
+      operationId: computersGET
+      parameters:
+      - name: start
+        in: query
+        description: Start offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Limit offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/computersList'
+                x-content-type: application/json
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /computer/{id}:
+    get:
+      summary: Get a computer by its ID
+      operationId: computerIdGET
+      parameters:
+      - name: id
+        in: path
+        description: ID of the computer in OCS database
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/computersList'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /computer/{id}/{sections}:
+    get:
+      summary: Get sections informations of a specific computer
+      operationId: computerIdSectionsGET
+      parameters:
+      - name: id
+        in: path
+        description: ID of the computer in OCS database
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: sections
+        in: path
+        description: "Name of the requested section (i.e -> bios, software, etc..)"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: where
+        in: query
+        description: Search on a specific column of the specific section.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: operator
+        in: query
+        description: "Search operator (like, not like, =, !=, <, >, <=, >=). Mandatory\
+          \ if where parameter is set."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/computerDetail'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /softwares:
+    get:
+      summary: Get software list from database
+      operationId: softwaresGET
+      parameters:
+      - name: start
+        in: query
+        description: Start offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Limit offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: soft
+        in: query
+        description: Name of the software you want to search (optional)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/softwaresList'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /snmps/typeList:
+    get:
+      summary: Get a SNMP type list
+      operationId: snmpsTypeListGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNMPType'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /snmp/{snmp_type}:
+    get:
+      summary: Get snmp device list of a specific snmp type
+      operationId: snmpSnmp_typeGET
+      parameters:
+      - name: snmp_type
+        in: path
+        description: Name of the snmp type you want to list
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: Start offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Limit offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNMPDetail'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /snmp/{snmp_type}/{id}:
+    get:
+      summary: Get a device from a snmp type with its ID
+      operationId: snmpSnmp_typeIdGET
+      parameters:
+      - name: snmp_type
+        in: path
+        description: Name of the snmp type you want to list
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Identifiant en base de données de l'équipement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SNMPDetail'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /ipdiscover:
+    get:
+      summary: List IPDiscover network list
+      operationId: ipdiscoverGET
+      parameters:
+      - name: start
+        in: query
+        description: Start offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Limit offset of the query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipdiscoverList'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+  /ipdiscover/network/{netid}:
+    get:
+      summary: Get list of network devices scanned on one network
+      operationId: ipdiscoverNetworkNetidGET
+      parameters:
+      - name: netid
+        in: path
+        description: Start offset of the query
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipdiscoverNetdevices'
+        "401":
+          description: Authentication information is missing or invalid
+          headers:
+            WWW_Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Authorization token configured in Apache2 host
+      security:
+      - basicAuth: []
+      x-swagger-router-controller: Default
+components:
+  schemas:
+    listOfID:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int32
+          example: 1942
+      example:
+        ID: 1942
+    computersList:
+      type: object
+      properties:
+        '{computer_id}':
+          $ref: '#/components/schemas/computersList_computer_id'
+      description: In this case batteries and bios are inventory sections defined
+        in Map.pm file
+      example:
+        '{computer_id}':
+          accountinfo:
+          - HARDWARE_ID: 16
+            TAG: DEV-MACHINE
+          - HARDWARE_ID: 16
+            TAG: DEV-MACHINE
+          batteries:
+          - batteries
+          - batteries
+          bios:
+          - BDATE: 04/16/2021
+            HARDWARE_ID: 16
+            SMODEL: PowerEdge R340
+            BMANUFACTURER: Dell Inc.
+            BVERSION: 2.5.1
+            MMANUFACTURER: Dell Inc.
+            MSN: ""
+            MMODEL: 045M96
+            SMANUFACTURER: ""
+            ASSETTAG: ""
+            TYPE: Rack Mount Chassis
+            SSN: ""
+          - BDATE: 04/16/2021
+            HARDWARE_ID: 16
+            SMODEL: PowerEdge R340
+            BMANUFACTURER: Dell Inc.
+            BVERSION: 2.5.1
+            MMANUFACTURER: Dell Inc.
+            MSN: ""
+            MMODEL: 045M96
+            SMANUFACTURER: ""
+            ASSETTAG: ""
+            TYPE: Rack Mount Chassis
+            SSN: ""
+    computerDetail:
+      type: object
+      properties:
+        '{computer_id}':
+          $ref: '#/components/schemas/computerDetail_computer_id'
+      example:
+        '{computer_id}':
+          bios:
+          - BDATE: 04/16/2021
+            HARDWARE_ID: 16
+            SMODEL: PowerEdge R340
+            BMANUFACTURER: Dell Inc.
+            BVERSION: 2.5.1
+            MMANUFACTURER: Dell Inc.
+            MSN: ""
+            MMODEL: 045M96
+            SMANUFACTURER: ""
+            ASSETTAG: ""
+            TYPE: Rack Mount Chassis
+            SSN: ""
+          - BDATE: 04/16/2021
+            HARDWARE_ID: 16
+            SMODEL: PowerEdge R340
+            BMANUFACTURER: Dell Inc.
+            BVERSION: 2.5.1
+            MMANUFACTURER: Dell Inc.
+            MSN: ""
+            MMODEL: 045M96
+            SMANUFACTURER: ""
+            ASSETTAG: ""
+            TYPE: Rack Mount Chassis
+            SSN: ""
+    softwaresList:
+      type: array
+      items:
+        $ref: '#/components/schemas/softwaresList_inner'
+    SNMPType:
+      type: array
+      items:
+        $ref: '#/components/schemas/SNMPType_inner'
+    SNMPDetail:
+      type: array
+      items:
+        $ref: '#/components/schemas/SNMPDetail_inner'
+    ipdiscoverList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ipdiscoverList_inner'
+    ipdiscoverNetdevices:
+      type: array
+      items:
+        $ref: '#/components/schemas/ipdiscoverNetdevices_inner'
+    computersList_computer_id_accountinfo:
+      type: object
+      properties:
+        HARDWARE_ID:
+          type: integer
+          format: int32
+          example: 16
+        TAG:
+          type: string
+          example: DEV-MACHINE
+      example:
+        HARDWARE_ID: 16
+        TAG: DEV-MACHINE
+    computersList_computer_id_bios:
+      type: object
+      properties:
+        ASSETTAG:
+          type: string
+          example: ""
+        BDATE:
+          type: string
+          example: 04/16/2021
+        BMANUFACTURER:
+          type: string
+          example: Dell Inc.
+        BVERSION:
+          type: string
+          example: 2.5.1
+        HARDWARE_ID:
+          type: integer
+          format: int32
+          example: 16
+        MMANUFACTURER:
+          type: string
+          example: Dell Inc.
+        MMODEL:
+          type: string
+          example: 045M96
+        MSN:
+          type: string
+          example: ""
+        SMANUFACTURER:
+          type: string
+          example: ""
+        SMODEL:
+          type: string
+          example: PowerEdge R340
+        SSN:
+          type: string
+          example: ""
+        TYPE:
+          type: string
+          example: Rack Mount Chassis
+      example:
+        BDATE: 04/16/2021
+        HARDWARE_ID: 16
+        SMODEL: PowerEdge R340
+        BMANUFACTURER: Dell Inc.
+        BVERSION: 2.5.1
+        MMANUFACTURER: Dell Inc.
+        MSN: ""
+        MMODEL: 045M96
+        SMANUFACTURER: ""
+        ASSETTAG: ""
+        TYPE: Rack Mount Chassis
+        SSN: ""
+    computersList_computer_id:
+      type: object
+      properties:
+        accountinfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/computersList_computer_id_accountinfo'
+        batteries:
+          type: array
+          items:
+            type: string
+            format: nullable
+        bios:
+          type: array
+          items:
+            $ref: '#/components/schemas/computersList_computer_id_bios'
+      example:
+        accountinfo:
+        - HARDWARE_ID: 16
+          TAG: DEV-MACHINE
+        - HARDWARE_ID: 16
+          TAG: DEV-MACHINE
+        batteries:
+        - batteries
+        - batteries
+        bios:
+        - BDATE: 04/16/2021
+          HARDWARE_ID: 16
+          SMODEL: PowerEdge R340
+          BMANUFACTURER: Dell Inc.
+          BVERSION: 2.5.1
+          MMANUFACTURER: Dell Inc.
+          MSN: ""
+          MMODEL: 045M96
+          SMANUFACTURER: ""
+          ASSETTAG: ""
+          TYPE: Rack Mount Chassis
+          SSN: ""
+        - BDATE: 04/16/2021
+          HARDWARE_ID: 16
+          SMODEL: PowerEdge R340
+          BMANUFACTURER: Dell Inc.
+          BVERSION: 2.5.1
+          MMANUFACTURER: Dell Inc.
+          MSN: ""
+          MMODEL: 045M96
+          SMANUFACTURER: ""
+          ASSETTAG: ""
+          TYPE: Rack Mount Chassis
+          SSN: ""
+    computerDetail_computer_id:
+      type: object
+      properties:
+        bios:
+          type: array
+          items:
+            $ref: '#/components/schemas/computersList_computer_id_bios'
+      example:
+        bios:
+        - BDATE: 04/16/2021
+          HARDWARE_ID: 16
+          SMODEL: PowerEdge R340
+          BMANUFACTURER: Dell Inc.
+          BVERSION: 2.5.1
+          MMANUFACTURER: Dell Inc.
+          MSN: ""
+          MMODEL: 045M96
+          SMANUFACTURER: ""
+          ASSETTAG: ""
+          TYPE: Rack Mount Chassis
+          SSN: ""
+        - BDATE: 04/16/2021
+          HARDWARE_ID: 16
+          SMODEL: PowerEdge R340
+          BMANUFACTURER: Dell Inc.
+          BVERSION: 2.5.1
+          MMANUFACTURER: Dell Inc.
+          MSN: ""
+          MMODEL: 045M96
+          SMANUFACTURER: ""
+          ASSETTAG: ""
+          TYPE: Rack Mount Chassis
+          SSN: ""
+    softwaresList_inner:
+      type: object
+      properties:
+        NAME:
+          type: string
+          example: 7-Zip 16.02
+        PUBLISHER:
+          type: string
+          example: Igor Pavlov
+        VERSION:
+          type: string
+          example: "16.02"
+      example:
+        PUBLISHER: Igor Pavlov
+        VERSION: "16.02"
+        NAME: 7-Zip 16.02
+    SNMPType_inner:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int32
+          example: 13
+        TABLE_TYPE_NAME:
+          type: string
+          example: snmp_default
+        TYPE_NAME:
+          type: string
+          example: Default
+      example:
+        TABLE_TYPE_NAME: snmp_default
+        ID: 13
+        TYPE_NAME: Default
+    SNMPDetail_inner:
+      type: object
+      properties:
+        DefaultAddressIP:
+          type: string
+          example: 127.0.0.1
+        DefaultDescription:
+          type: string
+          example: This is a description
+        DefaultGateway:
+          type: string
+          example: 172.18.25.254
+        DefaultLocation:
+          type: string
+          example: Here
+        DefaultMacAddress:
+          type: string
+          format: nullable
+        DefaultName:
+          type: string
+          example: My Equipment
+        DefaultUptime:
+          type: string
+          format: nullable
+        ID:
+          type: integer
+          format: int32
+          example: 1
+        LASTDATE:
+          type: string
+          format: date-time
+          example: 2023-06-08T12:22:18Z
+      example:
+        DefaultAddressIP: 127.0.0.1
+        DefaultDescription: This is a description
+        LASTDATE: 2023-06-08T12:22:18Z
+        DefaultUptime: DefaultUptime
+        DefaultGateway: 172.18.25.254
+        DefaultName: My Equipment
+        DefaultMacAddress: DefaultMacAddress
+        ID: 1
+        DefaultLocation: Here
+    ipdiscoverList_inner:
+      type: object
+      properties:
+        NETID:
+          type: string
+          example: 172.18.25.0
+      example:
+        NETID: 172.18.25.0
+    ipdiscoverNetdevices_inner:
+      type: object
+      properties:
+        DATE:
+          type: string
+          format: date-time
+          example: 2023-06-08T12:15:08Z
+        HARDWARE_ID:
+          type: integer
+          format: int32
+          example: 16
+        IP:
+          type: string
+          example: 172.18.25.254
+        MAC:
+          type: string
+          example: 00:0d:b9:51:fc:aa
+        MASK:
+          type: string
+          example: 255.255.255.0
+        NAME:
+          type: string
+          example: "-"
+        NETID:
+          type: string
+          example: 172.18.25.0
+        TAG:
+          type: string
+          example: DEV-MACHINE
+      example:
+        DATE: 2023-06-08T12:15:08Z
+        HARDWARE_ID: 16
+        NETID: 172.18.25.0
+        IP: 172.18.25.254
+        TAG: DEV-MACHINE
+        MAC: 00:0d:b9:51:fc:aa
+        MASK: 255.255.255.0
+        NAME: "-"
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          style: simple
+          explode: false
+          schema:
+            type: string
+            description: Authorization token configured in Apache2 host
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

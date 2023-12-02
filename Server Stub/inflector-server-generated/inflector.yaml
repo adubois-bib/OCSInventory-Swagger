@@ -1,0 +1,28 @@
+controllerPackage: io.swagger.controllers
+modelPackage:  io.swagger.model
+swaggerUrl: ./src/main/resources/openapi3.yaml
+modelMappings:
+  # to enable explicit mappings, use this syntax:
+  DefinitionFromSwaggerSpecification: fully.qualified.path.to.Model
+  ComputerDetail : io.swagger.model.ComputerDetail
+ComputerDetailComputerId : io.swagger.model.ComputerDetailComputerId
+ComputersList : io.swagger.model.ComputersList
+ComputersListComputerId : io.swagger.model.ComputersListComputerId
+ComputersListComputerIdAccountinfo : io.swagger.model.ComputersListComputerIdAccountinfo
+ComputersListComputerIdBios : io.swagger.model.ComputersListComputerIdBios
+IpdiscoverList : io.swagger.model.IpdiscoverList
+IpdiscoverListInner : io.swagger.model.IpdiscoverListInner
+IpdiscoverNetdevices : io.swagger.model.IpdiscoverNetdevices
+IpdiscoverNetdevicesInner : io.swagger.model.IpdiscoverNetdevicesInner
+ListOfID : io.swagger.model.ListOfID
+SNMPDetail : io.swagger.model.SNMPDetail
+SNMPDetailInner : io.swagger.model.SNMPDetailInner
+SNMPType : io.swagger.model.SNMPType
+SNMPTypeInner : io.swagger.model.SNMPTypeInner
+SoftwaresList : io.swagger.model.SoftwaresList
+SoftwaresListInner : io.swagger.model.SoftwaresListInner
+
+entityProcessors:
+  - json
+  - xml
+  - yaml

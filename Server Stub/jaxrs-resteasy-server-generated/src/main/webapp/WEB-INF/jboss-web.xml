@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>/ocsapi/v1</context-root>
+</jboss-web>
